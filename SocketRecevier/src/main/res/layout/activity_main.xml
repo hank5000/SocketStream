@@ -1,0 +1,80 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="fill_parent"
+    android:orientation="horizontal"
+    android:layout_height="fill_parent" tools:context=".MainActivity">
+<RelativeLayout  android:layout_width="100dp"
+    android:layout_height="fill_parent" >
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        >
+
+        <Button android:id="@+id/btnIp" android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="IP"/>
+
+        <Button android:id="@+id/btn" android:layout_width="100dp"
+            android:layout_height="wrap_content" android:text="start"/>
+
+        <Button android:id="@+id/btnA" android:layout_width="100dp"
+            android:layout_height="wrap_content" android:text="all"/>
+
+        <LinearLayout android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:orientation="horizontal">
+        <Button android:id="@+id/btn1" android:layout_width="50dp"
+            android:layout_height="wrap_content" android:text="1"/>
+
+        <Button android:id="@+id/btn2" android:layout_width="50dp"
+            android:layout_height="wrap_content" android:text="2"/>
+        </LinearLayout>
+    <LinearLayout android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:orientation="horizontal">
+        <Button android:id="@+id/btn3" android:layout_width="50dp"
+            android:layout_height="wrap_content" android:text="3"/>
+
+        <Button android:id="@+id/btn4" android:layout_width="50dp"
+            android:layout_height="wrap_content" android:text="4"/>
+    </LinearLayout>
+
+        <Button android:id="@+id/btn5" android:layout_width="100dp"
+            android:layout_height="wrap_content" android:text="grid"/>
+
+        <Button android:id="@+id/recordBtn" android:layout_width="100dp"
+            android:layout_height="wrap_content" android:text="Record"/>
+
+    </LinearLayout>
+    </RelativeLayout>
+    <RelativeLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    android:layout_centerHorizontal="true" >
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/hank"/>
+
+        <!--<LinearLayout-->
+            <!--android:orientation="vertical"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:id="@+id/hank2"/>-->
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/image"/>
+
+
+    </RelativeLayout>
+
+</LinearLayout>
+

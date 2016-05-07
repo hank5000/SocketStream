@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/SocketRecevier/SocketRecevier.iml" filepath="$PROJECT_DIR$/SocketRecevier/SocketRecevier.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SocketStreamProject.iml" filepath="$PROJECT_DIR$/SocketStreamProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SocketStreamer/SocketStreamer.iml" filepath="$PROJECT_DIR$/SocketStreamer/SocketStreamer.iml" />
+    </modules>
+  </component>
+</project>
