@@ -2,6 +2,7 @@ package com.example.hankwu.csilanstreamout;
 
 import android.opengl.GLSurfaceView;
 import android.util.Log;
+import android.view.Surface;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;
@@ -22,21 +23,25 @@ public class WindowSurfaceFactory implements GLSurfaceView.EGLWindowSurfaceFacto
 
     private final String TAG = this.getClass().getName();
 
+    private EGLSurface mEGLFourInOneEncodeSurface;
 
-    EGLDisplay gDisplay = null;
-    EGLConfig gConfig = null;
+    private Surface mFourInOneRecordSurface = null;
+
+    EGLDisplay mDisplay = null;
+    EGLConfig mConfig = null;
 
     public EGLSurface createWindowSurface(EGL10 egl, EGLDisplay display,
                                           EGLConfig config, Object nativeWindow) {
         EGLSurface result = null;
         try {
             mEGLPreviewSurface = egl.eglCreateWindowSurface(display, config, nativeWindow, null);
+            if(!Utils.bRecorder) {
+                Encoder.getEncoder().create();
+                mRecordEGLSurface = egl.eglCreateWindowSurface(display, config, Encoder.getEncoder().getsurface(), null);
+            }
 
-            Encoder.getEncoder().create();
-            mRecordEGLSurface = egl.eglCreateWindowSurface(display, config, Encoder.getEncoder().getsurface(), null);
-
-            gDisplay = display;
-            gConfig  = config;
+            mDisplay = display;
+            mConfig = config;
 
         } catch (IllegalArgumentException e) {
             Log.e(TAG, "eglCreateWindowSurface (native)", e);
@@ -45,6 +50,26 @@ public class WindowSurfaceFactory implements GLSurfaceView.EGLWindowSurfaceFacto
         result = mEGLPreviewSurface;
         return result;
     }
+
+    public void setRecordSurface(Surface surface)
+    {
+        EGL10 egl10 = (EGL10) EGLContext.getEGL();
+
+        mFourInOneRecordSurface = surface;
+        mRecordEGLSurface = egl10.eglCreateWindowSurface(mDisplay, mConfig, mFourInOneRecordSurface, null);
+    }
+
+    public void changeRecordEGLSurface(Surface surface)
+    {
+        EGL10 egl10 = (EGL10) EGLContext.getEGL();
+        egl10.eglDestroySurface(mDisplay, mRecordEGLSurface);
+
+        mFourInOneRecordSurface.release();
+        mFourInOneRecordSurface = null;
+        mFourInOneRecordSurface = surface;
+        mRecordEGLSurface = egl10.eglCreateWindowSurface(mDisplay, mConfig, mFourInOneRecordSurface, null);
+    }
+
 
     public void destroySurface(EGL10 egl, EGLDisplay display, EGLSurface surface) {
         egl.eglDestroySurface(display, surface);

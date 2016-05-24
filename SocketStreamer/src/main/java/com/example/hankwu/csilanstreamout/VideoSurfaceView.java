@@ -168,10 +168,28 @@ class VideoSurfaceView extends GLSurfaceView {
             Matrix.setIdentityM(mSTMatrix, 0);
         }
         int number = 0;
+        boolean bFirst = false;
+        boolean onRecreateRecorder = false;
         @Override
         public void onDrawFrame(GL10 glUnused) {
 
+            if(Utils.bRecorder) {
+                if (!bFirst) {
+                    Recorder.getRecorder().initialize();
+                    try {
+                        Recorder.getRecorder().setRecordPath("/mnt/usbdisk/usbdisk4/hank/");
+                        Recorder.getRecorder().createMainRecord();
+                        windowSurfaceFactory.setRecordSurface(Recorder.getRecorder().getMainRecorderSurface());
+                        Recorder.getRecorder().start();
+                        bFirst = true;
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             if (number%2==0) {
+                number = 0;
                 mSurfaceTextures[0].updateTexImage();
                 mSurfaceTextures[0].getTransformMatrix(mSTMatrix);
 
@@ -179,16 +197,47 @@ class VideoSurfaceView extends GLSurfaceView {
                 GLES20.glViewport(0, 0, W, H);
                 Draw();
 
-                windowSurfaceFactory.makeCurrentToRecord(contextFactory.getContext());
-                GLES20.glViewport(0, 0, GlobalInfo.width, GlobalInfo.height);
-                if(GlobalInfo.encodeComponent==-1) {
-                    Draw();
-                } else {
-                    Draw(GlobalInfo.encodeComponent);
-                }
-                windowSurfaceFactory.swapRecordBuffers();
+                if(!Utils.bRecorder) {
+                    windowSurfaceFactory.makeCurrentToRecord(contextFactory.getContext());
+                    GLES20.glViewport(0, 0, GlobalInfo.width, GlobalInfo.height);
+                    if (GlobalInfo.encodeComponent == -1) {
+                        Draw();
+                    } else {
+                        Draw(GlobalInfo.encodeComponent);
+                    }
+                    windowSurfaceFactory.swapRecordBuffers();
 
-                Encoder.getEncoder().streamOut();
+                    Encoder.getEncoder().streamOut();
+                } else {
+                    if(!onRecreateRecorder) {
+                        windowSurfaceFactory.makeCurrentToRecord(contextFactory.getContext());
+                        GLES20.glViewport(0, 0, GlobalInfo.width, GlobalInfo.height);
+                        Draw();
+                        windowSurfaceFactory.swapRecordBuffers();
+                    }
+                }
+            } else if (Utils.bRecorder && !onRecreateRecorder) {
+                if(Recorder.getRecorder().checkTime()) {
+                    onRecreateRecorder = true;
+                    new Thread(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            try
+                            {
+                                Recorder.getRecorder().recreate();
+                                windowSurfaceFactory.changeRecordEGLSurface(Recorder.getRecorder().getMainRecorderSurface());
+                                Recorder.getRecorder().start();
+                                onRecreateRecorder = false;
+                            }
+                            catch (IOException e)
+                            {
+                                e.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
             }
             number++;
         }
